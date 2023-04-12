@@ -47,5 +47,53 @@ public class MemberDAO {
 		return dbFlag;
 		
 	}
+	
+	public int loginCheck(String id, String pass) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM members WHERE id = ? AND pass = ?";
+		
+		int dbFlag = 0;
+		
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(url, username, password);
+			
+			pstmt = conn.prepareStatement(sql);				
+			pstmt.setString(1, id);
+			pstmt.setString(2, pass);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dbFlag = 1;//로그인 성공				
+			} else {
+				dbFlag = 0;//로그인 실패
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}				
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		
+		return dbFlag;
+	}
+	
 
 }
