@@ -95,5 +95,42 @@ public class MemberDAO {
 		return dbFlag;
 	}
 	
+	public int deleteMember(String id) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "DELETE FROM members WHERE id=?";
+		
+		int dbFlag = 0;
+		
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(url, username, password);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);				
+			
+			dbFlag = pstmt.executeUpdate();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		
+		return dbFlag;
+		
+	}
+	
 
 }
